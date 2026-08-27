@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Climate Adaptation Workshop Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green:#5fb52e; --green-dk:#2f7a17;
+    --teal:#0f9b8e; --blue:#1c7dc4; --blue-dk:#0b4a7a; --gold:#e2a610;
+    /* Q1 tracks */
+    --a:#0b4a7a; --b:#0f9b8e; --c:#5fb52e;
+    /* Q2 dimensions */
+    --policy:#1c7dc4; --community:#5fb52e; --data:#0f9b8e; --infra:#e2a610;
+    --bg-a:#eef8ea; --bg-b:#cdeadb; --bg-c:#a9dbe0; --bg-d:#7ec3e0;
+    --card:#fff; --border:#dde9e4; --text:#1f2937; --muted:#6b7280;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; color:var(--text);
+    font-family:"Sarabun","Segoe UI",sans-serif;
+    background:linear-gradient(135deg,var(--bg-a) 0%,var(--bg-b) 30%,var(--bg-c) 65%,var(--bg-d) 100%);
+    background-attachment:fixed; min-height:100vh;
+  }
+  header{
+    background:linear-gradient(120deg,var(--green) 0%,var(--teal) 55%,var(--blue) 100%);
+    color:#fff; padding:20px 28px 0; position:relative; overflow:hidden;
+  }
+  header::after{content:"";position:absolute;right:-70px;top:-70px;width:240px;height:240px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,255,255,.25),rgba(255,255,255,0) 70%);}
+  .eyebrow{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    background:rgba(255,255,255,.18);display:inline-block;padding:4px 12px;border-radius:14px;
+    border:1px solid rgba(255,255,255,.4);}
+  header h1{margin:8px 0 0;font-size:31px;font-weight:800;line-height:1.1;}
+  header h1 span{color:#eafcff;}
+  header p.sub{margin:6px 0 0;font-size:14px;font-weight:600;opacity:.96;}
+  .pill{display:inline-block;background:#fff;color:var(--green-dk);font-weight:800;font-size:11.5px;
+    padding:4px 12px;border-radius:12px;margin-top:10px;}
+  .info-bar{display:flex;gap:20px;flex-wrap:wrap;font-size:12.5px;margin-top:12px;opacity:.95;}
+  nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;position:relative;z-index:1;}
+  nav button{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.45);color:#fff;
+    padding:9px 18px;border-radius:20px 20px 0 0;cursor:pointer;font-size:13.5px;font-weight:700;
+    font-family:inherit;transition:.15s;}
+  nav button:hover{background:rgba(255,255,255,.3);}
+  nav button.active{background:#f4fbf7;color:var(--blue-dk);border-bottom-color:#f4fbf7;}
+  main{max-width:1280px;margin:0 auto;padding:22px;}
+  .hidden{display:none !important;}
+
+  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;
+    box-shadow:0 2px 12px rgba(20,80,60,.07);}
+  .card+.card{margin-top:18px;}
+  .qhead{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;}
+  .qnum{flex:0 0 auto;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
+    color:#fff;font-weight:800;font-size:15px;}
+  .qnum.q1{background:linear-gradient(135deg,var(--blue-dk),var(--teal));}
+  .qnum.q2{background:linear-gradient(135deg,var(--green),var(--gold));}
+  .qtitle{font-size:16px;font-weight:800;color:var(--blue-dk);line-height:1.4;margin:0;}
+  .qtitle small{display:block;font-weight:600;color:var(--muted);font-size:12.5px;margin-top:3px;}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  @media(max-width:900px){.grid2{grid-template-columns:1fr;}}
+
+  label{display:block;font-size:12.5px;font-weight:700;color:#4b5563;margin:12px 0 4px;}
+  textarea,input[type=text],select,input[type=search]{width:100%;border:1px solid var(--border);
+    border-radius:9px;padding:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--text);}
+  textarea{min-height:88px;resize:vertical;}
+  textarea:focus,input:focus,select:focus{outline:2px solid rgba(28,125,196,.35);outline-offset:1px;}
+  .catgrid{display:grid;gap:8px;margin-top:4px;}
+  .catopt{display:flex;gap:9px;align-items:flex-start;border:1.5px solid var(--border);border-radius:10px;
+    padding:9px 11px;cursor:pointer;font-size:13px;background:#fcfefd;transition:.12s;}
+  .catopt:hover{background:#f2faf6;}
+  .catopt input{margin:2px 0 0;accent-color:var(--blue);flex:0 0 auto;}
+  .catopt b{display:block;font-size:13.5px;}
+  .catopt em{font-style:normal;color:var(--muted);font-size:11.5px;}
+  .catopt.sel{border-color:var(--blue);background:#eaf4fc;box-shadow:0 0 0 1px var(--blue) inset;}
+  .hintrow{margin-top:10px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+  .suggest{background:#fff8e1;border:1px solid #f0d894;border-radius:8px;padding:8px 10px;font-size:12.5px;margin-top:10px;}
+
+  button.primary{margin-top:14px;background:linear-gradient(120deg,var(--green),var(--blue));color:#fff;
+    border:none;padding:11px 18px;border-radius:9px;cursor:pointer;font-size:14px;font-weight:800;
+    font-family:inherit;width:100%;}
+  button.primary:hover{filter:brightness(1.06);}
+  button.ghost{background:#fff;border:1px solid var(--border);padding:7px 13px;border-radius:8px;
+    cursor:pointer;font-size:12.5px;font-family:inherit;color:var(--text);}
+  button.ghost:hover{background:#f4faf7;}
+  .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;background:var(--blue-dk);color:#fff;
+    padding:11px 20px;border-radius:24px;font-size:13.5px;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.25);
+    opacity:0;pointer-events:none;transition:.25s;z-index:99;}
+  .toast.show{opacity:1;bottom:34px;}
+
+  .badge{display:inline-block;padding:3px 9px;border-radius:11px;font-size:11px;font-weight:700;color:#fff;}
+  .stats-row{display:grid;gap:12px;margin-bottom:16px;grid-template-columns:repeat(4,1fr);}
+  @media(max-width:800px){.stats-row{grid-template-columns:repeat(2,1fr);}}
+  .stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;}
+  .stat .num{font-size:26px;font-weight:800;color:var(--blue-dk);line-height:1;}
+  .stat .lbl{font-size:12px;color:var(--muted);margin-top:5px;font-weight:600;}
+
+  .barwrap{display:grid;gap:9px;margin-top:6px;}
+  .bar{display:grid;grid-template-columns:190px 1fr 46px;align-items:center;gap:10px;font-size:12.5px;}
+  @media(max-width:640px){.bar{grid-template-columns:120px 1fr 40px;font-size:11.5px;}}
+  .bartrack{background:#eef2f0;border-radius:6px;height:16px;overflow:hidden;}
+  .barfill{height:100%;border-radius:6px;transition:width .4s;}
+  .bar b{text-align:right;font-weight:800;}
+
+  .board{display:grid;gap:12px;margin-top:12px;}
+  .board.c3{grid-template-columns:repeat(3,1fr);}
+  .board.c4{grid-template-columns:repeat(4,1fr);}
+  @media(max-width:1000px){.board.c3,.board.c4{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:620px){.board.c3,.board.c4{grid-template-columns:1fr;}}
+  .col{background:#f7fdfa;border:1px solid var(--border);border-radius:12px;padding:10px;min-height:110px;}
+  .col-head{font-size:12.5px;font-weight:800;margin-bottom:9px;padding-bottom:6px;border-bottom:2.5px solid;
+    display:flex;justify-content:space-between;gap:6px;line-height:1.3;}
+  .col-head span.cnt{background:rgba(0,0,0,.07);color:#374151;border-radius:9px;padding:0 7px;font-size:11.5px;
+    height:18px;display:grid;place-items:center;flex:0 0 auto;}
+  .note{background:#fff;border-left:4px solid;border-radius:7px;padding:9px 10px;margin-bottom:8px;
+    font-size:13px;box-shadow:0 1px 3px rgba(0,0,0,.06);line-height:1.5;}
+  .note .meta{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:10.5px;
+    color:var(--muted);margin-top:7px;}
+  .note .acts{display:flex;gap:5px;align-items:center;margin-top:7px;}
+  .note select{font-size:10.5px;padding:2px 4px;width:auto;border-radius:5px;}
+  .note button{background:none;border:none;color:#b91c1c;cursor:pointer;font-size:11px;font-family:inherit;padding:2px 4px;}
+  .empty{color:#9aa5a1;font-size:12.5px;text-align:center;padding:16px 6px;}
+  .toolbar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:4px;}
+  .toolbar input[type=search]{width:auto;flex:1;min-width:180px;}
+  .sechead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
+    border-bottom:2px solid var(--border);padding-bottom:9px;margin-bottom:12px;}
+  .sechead h3{margin:0;font-size:15px;color:var(--blue-dk);}
+  .sechead .tag{font-size:11.5px;font-weight:700;color:var(--muted);}
+  footer{max-width:1280px;margin:0 auto;padding:4px 22px 26px;font-size:11px;color:#5c7a70;text-align:center;}
+</style>
+</head>
+<body>
+
+<header>
+  <span class="eyebrow">ESG Symposium 2026 · SCG Internal Sharing Session</span>
+  <h1>Track 3 · Climate <span>Adaptation</span></h1>
+  <p class="sub">Interactive Workshop — Business Water Resilience</p>
+  <span class="pill">For SCG Only</span>
+  <div class="info-bar">
+    <div>🗓️ 2 September 2026</div>
+    <div>⏰ 08:30–11:45 hrs.</div>
+    <div>📍 SCG Multi-Purpose Building, 10th Floor</div>
+  </div>
+  <nav>
+    <button id="tQ1" class="active" onclick="tab('q1')">1️⃣ สิ่งที่ธุรกิจต้องทำ</button>
+    <button id="tQ2" onclick="tab('q2')">2️⃣ ข้อเสนอแนะภาครัฐ</button>
+    <button id="tD" onclick="tab('d')">📊 Dashboard</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ Q1 ============ -->
+<section id="vQ1">
+  <div class="card">
+    <div class="qhead">
+      <div class="qnum q1">1</div>
+      <h2 class="qtitle">ภาคธุรกิจควรเตรียมตัวและรับมืออย่างไรกับสถานการณ์น้ำท่วมและภัยแล้งที่รุนแรงมากขึ้น?
+        <small>เลือกกรอบคิด Climate Risk Framework ที่ตรงกับไอเดียของคุณ</small></h2>
+    </div>
+
+    <div class="grid2">
+      <div>
+        <label for="q1text">ไอเดีย / สิ่งที่ธุรกิจต้องทำ</label>
+        <textarea id="q1text" placeholder="เช่น ทำ Water Risk Mapping ครอบคลุมโรงงานและ Supply Chain ด้วย GIS"></textarea>
+        <label for="q1author">ผู้เสนอ / กลุ่ม (ไม่บังคับ)</label>
+        <input type="text" id="q1author" placeholder="เช่น กลุ่ม 3 / คุณสมชาย">
+        <div class="hintrow">
+          <button class="ghost" onclick="autoQ1()">✨ ให้ระบบแนะนำหมวด</button>
+          <span>ระบบจะวิเคราะห์คำสำคัญและเลือกหมวดให้ — แก้ไขได้เอง</span>
+        </div>
+        <div id="q1suggest" class="suggest hidden"></div>
+      </div>
+
+      <div>
+        <label>หมวดหมู่คำตอบ (Climate Risk Framework)</label>
+        <div class="catgrid" id="q1cats"></div>
+        <button class="primary" onclick="save(1)">✅ บันทึกคำตอบ</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sechead"><h3>คำตอบล่าสุด — คำถามที่ 1</h3><span class="tag" id="q1count">0 รายการ</span></div>
+    <div id="q1recent"></div>
+  </div>
+</section>
+
+<!-- ============ Q2 ============ -->
+<section id="vQ2" class="hidden">
+  <div class="card">
+    <div class="qhead">
+      <div class="qnum q2">2</div>
+      <h2 class="qtitle">ข้อเสนอแนะที่อยากให้ภาครัฐบาล / หน่วยงานที่เกี่ยวข้องสนับสนุน
+        <small>จัดกลุ่มประเด็นเป็น 4 มิติ: Policy · Community · Data · Infrastructure</small></h2>
+    </div>
+
+    <div class="grid2">
+      <div>
+        <label for="q2text">ข้อเสนอแนะ</label>
+        <textarea id="q2text" placeholder="เช่น เปิดข้อมูลน้ำท่วม ภัยแล้ง และ Climate Projection ในระดับพื้นที่"></textarea>
+        <label for="q2author">ผู้เสนอ / กลุ่ม (ไม่บังคับ)</label>
+        <input type="text" id="q2author" placeholder="เช่น กลุ่ม 5">
+        <div class="hintrow">
+          <button class="ghost" onclick="autoQ2()">✨ ให้ระบบแนะนำมิติ</button>
+          <span>ระบบจะวิเคราะห์คำสำคัญและเลือกมิติให้ — แก้ไขได้เอง</span>
+        </div>
+        <div id="q2suggest" class="suggest hidden"></div>
+      </div>
+
+      <div>
+        <label>มิติของข้อเสนอแนะ</label>
+        <div class="catgrid" id="q2cats"></div>
+        <button class="primary" onclick="save(2)">✅ บันทึกข้อเสนอแนะ</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sechead"><h3>ข้อเสนอแนะล่าสุด — คำถามที่ 2</h3><span class="tag" id="q2count">0 รายการ</span></div>
+    <div id="q2recent"></div>
+  </div>
+</section>
+
+<!-- ============ DASHBOARD ============ -->
+<section id="vD" class="hidden">
+  <div class="stats-row">
+    <div class="stat"><div class="num" id="sAll">0</div><div class="lbl">คำตอบทั้งหมด</div></div>
+    <div class="stat"><div class="num" id="sQ1">0</div><div class="lbl">Q1 · สิ่งที่ธุรกิจต้องทำ</div></div>
+    <div class="stat"><div class="num" id="sQ2">0</div><div class="lbl">Q2 · ข้อเสนอแนะภาครัฐ</div></div>
+    <div class="stat"><div class="num" id="sGrp">0</div><div class="lbl">กลุ่ม / ผู้เสนอ</div></div>
+  </div>
+
+  <div class="card">
+    <div class="toolbar">
+      <input type="search" id="q" placeholder="🔍 ค้นหาข้อความคำตอบทั้ง 2 คำถาม..." oninput="renderBoards()">
+      <button class="ghost" onclick="exportCSV()">⬇️ Export CSV</button>
+      <button class="ghost" onclick="seedDemo()">🧪 ใส่ข้อมูลตัวอย่าง</button>
+      <button class="ghost" onclick="clearAll()">🗑️ ล้างข้อมูลทั้งหมด</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sechead">
+      <h3>① ภาคธุรกิจควรเตรียมตัวและรับมืออย่างไร? <span class="tag">— Climate Risk Framework</span></h3>
+      <span class="tag" id="dQ1n">0 รายการ</span>
+    </div>
+    <div class="barwrap" id="q1bars"></div>
+    <div class="board c3" id="q1board"></div>
+  </div>
+
+  <div class="card">
+    <div class="sechead">
+      <h3>② ข้อเสนอแนะต่อภาครัฐ / หน่วยงานที่เกี่ยวข้อง <span class="tag">— 4 มิติ</span></h3>
+      <span class="tag" id="dQ2n">0 รายการ</span>
+    </div>
+    <div class="barwrap" id="q2bars"></div>
+    <div class="board c4" id="q2board"></div>
+  </div>
+</section>
+
+</main>
+
+<footer>ESG Symposium 2026 · Track 3 Climate Adaptation — Interactive Workshop: Business Water Resilience · Internal Use Only, For SCG Employees</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------- config ---------- */
+const Q1 = {
+  RiskAssessment:{ key:'A', name:'Risk Assessment', th:'ความเสี่ยง / ประเมินความเสี่ยง', hex:'#0b4a7a',
+    kw:['risk','ความเสี่ยง','mapping','แผนที่','gis','scenario','simulation','จำลอง','bcp','business continuity','ความต่อเนื่องทางธุรกิจ','supply chain','ซัพพลาย','โลจิสติกส์','logistic','ประเมิน','assessment','hazard','stress test','คาดการณ์','แผนสำรอง','drill','ซ้อมแผน','due diligence','ผลกระทบ']},
+  Vulnerability:{ key:'B', name:'Vulnerability Management', th:'การจัดการความเปราะบาง', hex:'#0f9b8e',
+    kw:['water efficiency','ประสิทธิภาพการใช้น้ำ','recycl','reuse','นำน้ำกลับมาใช้','zld','zero liquid','closed-loop','ลดการใช้น้ำ','diversify','แหล่งน้ำ','สำรองน้ำ','บ่อเก็บน้ำ','nature-based','ธรรมชาติ','stewardship','วัฒนธรรม','ยืดหยุ่น','resilien','ลดความเปราะบาง','หมุนเวียน','circular','ประปา','บาดาล','ฝนหลวง','พื้นที่กันชน']},
+  Monitoring:{ key:'C', name:'Monitoring & Warning System', th:'การติดตามและระบบเตือนภัย', hex:'#5fb52e',
+    kw:['monitor','ติดตาม','real-time','เรียลไทม์','sensor','เซนเซอร์','iot','early warning','เตือนภัย','แจ้งเตือน','dashboard','ai','โมเดล','model','forecast','พยากรณ์','ert','emergency response','crisis communication','สื่อสารภาวะวิกฤต','ตรวจวัด','คุณภาพน้ำ','ปริมาณน้ำ','แจ้งข่าว','ระบบเตือน','ทดสอบแผน']}
+};
+const Q2 = {
+  Policy:{ name:'Policy', th:'นโยบาย / มาตรฐาน', hex:'#1c7dc4',
+    kw:['policy','นโยบาย','กฎหมาย','ระเบียบ','มาตรฐาน','มาตรการ','งบประมาณ','budget','regulation','ผังเมือง','zoning','incentive','subsidy','อุดหนุน','ภาษี','tax','สิทธิประโยชน์','แผนแม่บท','บูรณาการแผน','กำกับดูแล','governance','พรบ','กฎระเบียบ','ส่งเสริม','กำหนดมาตรฐาน','ใบอนุญาต']},
+  Community:{ name:'Community', th:'ชุมชน / การมีส่วนร่วม', hex:'#5fb52e',
+    kw:['community','ชุมชน','ประชาชน','มีส่วนร่วม','participation','อาสาสมัคร','volunteer','การศึกษา','education','awareness','เครือข่าย','network','ท้องถิ่น','local','อบรม','training','capacity','เปราะบาง','เยาวชน','ผู้สูงอายุ','ความเชื่อมั่น','กองทุน','สหกรณ์','stewardship','ผลกระทบร่วม']},
+  Data:{ name:'Data', th:'ข้อมูล / เทคโนโลยี', hex:'#0f9b8e',
+    kw:['data','ข้อมูล','open data','api','platform','แพลตฟอร์ม','sensor','เซนเซอร์','dashboard','พยากรณ์','forecast','projection','ai','สถิติ','แผนที่','gis','ดาวเทียม','satellite','เชื่อมโยงข้อมูล','ฐานข้อมูล','database','real-time','ดิจิทัล','digital','แบบจำลอง','one water']},
+  Infrastructure:{ name:'Infrastructure', th:'โครงสร้างพื้นฐาน', hex:'#e2a610',
+    kw:['infrastructure','โครงสร้างพื้นฐาน','ระบายน้ำ','drainage','เขื่อน','dam','ประตูระบายน้ำ','คลอง','แก้มลิง','อ่างเก็บน้ำ','กำแพงกันน้ำ','flood wall','ถนน','road','ประปา','water supply','ท่อ','pipeline','สมาร์ท','smart monitoring','ศูนย์ข้อมูล','แหล่งกักเก็บ','nature-based','พื้นที่ชุ่มน้ำ','wetland','ป่าชายเลน','mangrove','โครงข่าย','ระบบส่งน้ำ']}
+};
+const KEY='esg2026_track3_workshop_v1';
+let rows = load();
+let sel1 = null, sel2 = null;
+
+function load(){ try{ return JSON.parse(localStorage.getItem(KEY)||'[]'); }catch(e){ return []; } }
+function persist(){ try{ localStorage.setItem(KEY, JSON.stringify(rows)); }catch(e){} }
+function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show');
+  clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2200); }
+
+/* ---------- build category pickers ---------- */
+function buildCats(){
+  document.getElementById('q1cats').innerHTML = Object.entries(Q1).map(([id,c])=>`
+    <label class="catopt" data-id="${id}" onclick="pick(1,'${id}')">
+      <input type="radio" name="q1cat" value="${id}">
+      <span><b style="color:${c.hex}">${c.key}. ${c.name}</b><em>${c.th}</em></span>
+    </label>`).join('');
+  document.getElementById('q2cats').innerHTML = Object.entries(Q2).map(([id,c])=>`
+    <label class="catopt" data-id="${id}" onclick="pick(2,'${id}')">
+      <input type="radio" name="q2cat" value="${id}">
+      <span><b style="color:${c.hex}">${c.name}</b><em>${c.th}</em></span>
+    </label>`).join('');
+}
+function pick(q,id){
+  if(q===1) sel1=id; else sel2=id;
+  document.querySelectorAll(`#q${q}cats .catopt`).forEach(el=>{
+    const on = el.dataset.id===id;
+    el.classList.toggle('sel', on);
+    el.querySelector('input').checked = on;
+  });
+}
+
+/* ---------- classify ---------- */
+function classify(text, set){
+  const t=(text||'').toLowerCase();
+  if(!t.trim()) return null;
+  let best=null, hi=0;
+  for(const id in set){
+    let n=0; set[id].kw.forEach(k=>{ if(t.includes(k.toLowerCase())) n++; });
+    if(n>hi){ hi=n; best=id; }
+  }
+  return hi>0 ? best : null;
+}
+function autoQ1(){ auto(1,'q1text','q1suggest',Q1); }
+function autoQ2(){ auto(2,'q2text','q2suggest',Q2); }
+function auto(q, txtId, boxId, set){
+  const txt=document.getElementById(txtId).value.trim();
+  const box=document.getElementById(boxId);
+  if(!txt){ toast('กรุณาพิมพ์ข้อความก่อน'); return; }
+  const g=classify(txt,set);
+  box.classList.remove('hidden');
+  if(g){ pick(q,g); box.innerHTML = `ระบบแนะนำ: <span class="badge" style="background:${set[g].hex}">${set[g].name}</span> — ปรับได้หากไม่ตรง`; }
+  else { box.innerHTML = 'ไม่พบคำสำคัญที่ชัดเจน — กรุณาเลือกหมวดด้วยตนเอง'; }
+}
+
+/* ---------- save ---------- */
+function save(q){
+  const txt=document.getElementById(`q${q}text`).value.trim();
+  const who=document.getElementById(`q${q}author`).value.trim();
+  const cat = q===1?sel1:sel2;
+  if(!txt){ toast('กรุณาพิมพ์ข้อความคำตอบ'); return; }
+  if(!cat){ toast(q===1?'กรุณาเลือกหมวดหมู่ (A/B/C)':'กรุณาเลือกมิติ (4 มิติ)'); return; }
+  rows.unshift({id:Date.now()+'-'+Math.random().toString(16).slice(2), q, text:txt, author:who, cat, at:new Date().toISOString()});
+  persist();
+  document.getElementById(`q${q}text`).value='';
+  document.getElementById(`q${q}suggest`).classList.add('hidden');
+  if(q===1) sel1=null; else sel2=null;
+  document.querySelectorAll(`#q${q}cats .catopt`).forEach(el=>{el.classList.remove('sel'); el.querySelector('input').checked=false;});
+  renderAll();
+  toast('บันทึกแล้ว ✓');
+}
+
+/* ---------- tabs ---------- */
+function tab(t){
+  ['q1','q2','d'].forEach(k=>document.getElementById('v'+k.toUpperCase()).classList.toggle('hidden', k!==t));
+  document.getElementById('tQ1').classList.toggle('active', t==='q1');
+  document.getElementById('tQ2').classList.toggle('active', t==='q2');
+  document.getElementById('tD').classList.toggle('active', t==='d');
+  if(t==='d') window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ---------- render ---------- */
+function setOf(q){ return q===1?Q1:Q2; }
+
+function renderRecent(q){
+  const set=setOf(q), list=rows.filter(r=>r.q===q);
+  document.getElementById(`q${q}count`).textContent = list.length+' รายการ';
+  const el=document.getElementById(`q${q}recent`);
+  if(!list.length){ el.innerHTML='<p class="empty">ยังไม่มีคำตอบ — เริ่มบันทึกด้านบน</p>'; return; }
+  el.innerHTML = list.slice(0,6).map(r=>{
+    const c=set[r.cat]||{name:r.cat,hex:'#6b7280'};
+    return `<div class="note" style="border-color:${c.hex}">
+      <div>${esc(r.text)}</div>
+      <div class="meta"><span class="badge" style="background:${c.hex}">${c.name}</span>
+      <span>${r.author?esc(r.author)+' · ':''}${new Date(r.at).toLocaleString('th-TH')}</span></div></div>`;
+  }).join('');
+}
+
+function renderBars(q){
+  const set=setOf(q), list=rows.filter(r=>r.q===q), total=list.length;
+  const ids=Object.keys(set);
+  document.getElementById(`d${'Q'+q}n`).textContent = total+' รายการ';
+  document.getElementById(`q${q}bars`).innerHTML = ids.map(id=>{
+    const n=list.filter(r=>r.cat===id).length;
+    const pct= total? Math.round(n/total*100):0;
+    const c=set[id];
+    return `<div class="bar">
+      <span style="color:${c.hex};font-weight:700">${c.key?c.key+'. ':''}${c.name}</span>
+      <span class="bartrack"><span class="barfill" style="width:${pct}%;background:${c.hex}"></span></span>
+      <b>${n}</b></div>`;
+  }).join('');
+}
+
+function renderBoard(q){
+  const set=setOf(q), ids=Object.keys(set);
+  const s=(document.getElementById('q')?.value||'').toLowerCase();
+  document.getElementById(`q${q}board`).innerHTML = ids.map(id=>{
+    const c=set[id];
+    let items=rows.filter(r=>r.q===q && r.cat===id);
+    if(s) items=items.filter(r=>r.text.toLowerCase().includes(s)||(r.author||'').toLowerCase().includes(s));
+    return `<div class="col">
+      <div class="col-head" style="color:${c.hex};border-color:${c.hex}">
+        <span>${c.key?c.key+'. ':''}${c.name}</span><span class="cnt">${items.length}</span></div>
+      ${items.length? items.map(r=>`
+        <div class="note" style="border-color:${c.hex}">
+          <div>${esc(r.text)}</div>
+          <div class="meta"><span>${r.author?esc(r.author):'—'}</span>
+            <span>${new Date(r.at).toLocaleDateString('th-TH')}</span></div>
+          <div class="acts">
+            <select onchange="move('${r.id}',this.value)">
+              ${ids.map(x=>`<option value="${x}" ${x===id?'selected':''}>${set[x].key?set[x].key+'. ':''}${set[x].name}</option>`).join('')}
+            </select>
+            <button onclick="del('${r.id}')">ลบ</button>
+          </div>
+        </div>`).join('') : '<div class="empty">ยังไม่มีคำตอบ</div>'}
+    </div>`;
+  }).join('');
+}
+
+function renderBoards(){ renderBoard(1); renderBoard(2); }
+
+function renderStats(){
+  const a=rows.filter(r=>r.q===1).length, b=rows.filter(r=>r.q===2).length;
+  const g=new Set(rows.map(r=>(r.author||'').trim()).filter(Boolean)).size;
+  document.getElementById('sAll').textContent=rows.length;
+  document.getElementById('sQ1').textContent=a;
+  document.getElementById('sQ2').textContent=b;
+  document.getElementById('sGrp').textContent=g;
+}
+
+function renderAll(){
+  renderStats(); renderRecent(1); renderRecent(2);
+  renderBars(1); renderBars(2); renderBoards();
+}
+
+function move(id,cat){ const r=rows.find(x=>x.id===id); if(r){ r.cat=cat; persist(); renderAll(); toast('ย้ายหมวดแล้ว'); } }
+function del(id){ if(!confirm('ลบรายการนี้?')) return; rows=rows.filter(x=>x.id!==id); persist(); renderAll(); }
+function clearAll(){ if(!confirm('ล้างข้อมูลทั้งหมดในเครื่องนี้?')) return; rows=[]; persist(); renderAll(); toast('ล้างข้อมูลแล้ว'); }
+
+function exportCSV(){
+  if(!rows.length){ toast('ยังไม่มีข้อมูลให้ export'); return; }
+  const qn={1:'Q1 สิ่งที่ธุรกิจต้องทำ',2:'Q2 ข้อเสนอแนะภาครัฐ'};
+  const head=['Question','Category','Answer','Author','Timestamp'];
+  const body=rows.map(r=>[qn[r.q], (setOf(r.q)[r.cat]?.name)||r.cat, r.text, r.author||'', new Date(r.at).toLocaleString('th-TH')]);
+  const csv=[head,...body].map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\r\n');
+  const url=URL.createObjectURL(new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8;'}));
+  const a=document.createElement('a'); a.href=url; a.download='esg2026_track3_workshop.csv'; a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+}
+
+function seedDemo(){
+  const demo=[
+    [1,'RiskAssessment','ทำ Water Risk Mapping ครอบคลุมโรงงานและ Supply Chain ด้วย GIS','กลุ่ม 1'],
+    [1,'RiskAssessment','Scenario Simulation น้ำท่วม–ภัยแล้ง และจัดทำ BCP ให้ครบทุกสายการผลิต','กลุ่ม 1'],
+    [1,'Vulnerability','เพิ่มประสิทธิภาพการใช้น้ำและทำ Water Recycling & Reuse สู่ Zero Liquid Discharge','กลุ่ม 2'],
+    [1,'Vulnerability','กระจายแหล่งน้ำสำรองและใช้ Nature-based Solutions ร่วมกับชุมชน','กลุ่ม 2'],
+    [1,'Monitoring','ติดตามคุณภาพและปริมาณน้ำแบบ Real-time ด้วย Sensor และ Early Warning Dashboard','กลุ่ม 3'],
+    [1,'Monitoring','จัดตั้ง Emergency Response Team และซ้อมแผน Crisis Communication สม่ำเสมอ','กลุ่ม 3'],
+    [2,'Policy','กำหนดมาตรฐาน Water Risk Assessment สำหรับภาคอุตสาหกรรม','กลุ่ม 4'],
+    [2,'Policy','สิทธิประโยชน์ทางภาษีสำหรับโครงการลดการใช้น้ำและรีไซเคิลน้ำ','กลุ่ม 4'],
+    [2,'Community','สร้างการมีส่วนร่วมของชุมชนในการประเมินความเสี่ยงและเครือข่าย Water Stewardship','กลุ่ม 5'],
+    [2,'Data','เปิดข้อมูลน้ำท่วม ภัยแล้ง และ Climate Projection รายพื้นที่ผ่าน One Water Data Platform (Open Data / API)','กลุ่ม 6'],
+    [2,'Infrastructure','จัดทำแผนบริหารจัดการน้ำแบบบูรณาการ และเพิ่มพื้นที่กักเก็บน้ำ/แก้มลิง','กลุ่ม 6'],
+    [2,'Infrastructure','พัฒนาโครงข่าย Sensor และ Smart Monitoring ครอบคลุมทั่วประเทศ','กลุ่ม 7']
+  ];
+  const t=Date.now();
+  demo.forEach((d,i)=>rows.push({id:(t+i)+'-demo'+i, q:d[0], text:d[2], author:d[3], cat:d[1], at:new Date(t-i*60000).toISOString()}));
+  persist(); renderAll(); toast('ใส่ข้อมูลตัวอย่างแล้ว');
+}
+
+/* ---------- init ---------- */
+buildCats(); renderAll();
+</script>
+</body>
+</html>
